@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, ScrollView, Alert, TouchableHighlightComponent } from 'react-native';
-import { theme } from './colors';
+import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert, TouchableHighlightComponent } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Feather } from '@expo/vector-icons'; 
+import ToDoDefault from './MyComponent/ToDoDefault';
+import ToDoEdit from './MyComponent/ToDoEdit';
+import { theme } from './MyStyle/colors';
+import styles from './MyStyle/styles';
 
 const STORAGE_KEY = "@toDOs";
+const CATEGORY_KEY = "@category";
 
 export default function App() {
   const [isStudy, setIsStudy] = useState(true);
@@ -16,8 +19,15 @@ export default function App() {
     loadToDos();
   }, []);
 
-  const health = () => setIsStudy(false);
-  const study = () => setIsStudy(true);
+  const health = async () => {
+    setIsStudy(false);
+    await AsyncStorage.setItem(CATEGORY_KEY, "health");
+  };
+
+  const study = async () => {
+    setIsStudy(true);
+    await AsyncStorage.setItem(CATEGORY_KEY, "study");
+  };
     
   const onChangeText = (payload) => setToDo(payload);
 
@@ -27,6 +37,10 @@ export default function App() {
 
   const loadToDos = async () => {
     try {
+      const category = await AsyncStorage.getItem(CATEGORY_KEY);
+      if (category == "study") { setIsStudy(true); }
+      else { setIsStudy(false); }
+
       const str = await AsyncStorage.getItem(STORAGE_KEY);
       if (str != null) {
         setToDos(JSON.parse(str));
@@ -48,35 +62,20 @@ export default function App() {
 
     const newToDos = {
       ...toDos,
-      [Date.now()]: { toDo, isStudy }
+      [Date.now()]: { toDo, isStudy, done: false, editMode: false }
     };
     setToDos(newToDos);
     await saveToDos(newToDos);
     setToDo("");
   };
 
-  const deleteToDo = async (key) => {
-    Alert.alert(
-      "Delete" + toDos[key].toDo, 
-      "Are you sure?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => {
-            const newToDos = {...toDos};
-            delete newToDos[key];
-            setToDos(newToDos);
-            saveToDos(newToDos);        
-          }
-        }
-      ]
-    );
-  }
+  const editModeSwitch = (id) => {
+    const newToDos = {...toDos};
+    if (newToDos[id].editMode === true) { newToDos[id].editMode = false; }
+    else if (newToDos[id].editMode === false) { newToDos[id].editMode = true; }
+    setToDos(newToDos);
+    saveToDos(newToDos);
+  };
 
   return (
     <View style={styles.container}>
@@ -91,70 +90,25 @@ export default function App() {
       </View>
       <View>
         <TextInput
-          style={styles.input}
+          style={styles.insertInput}
           placeholder={isStudy ? "Add a To Do for Study Category" : "Add a To Do for Health Category"}
           returnKeyType="done"
           value={toDo}
           onChangeText={onChangeText}
           onSubmitEditing={addToDo}/>
         <ScrollView>
-          {Object.keys(toDos).map(key =>
-            toDos[key].isStudy === isStudy ?
-              <View key={key} style={styles.toDoView}>
-                <Text style={styles.toDoText}>{toDos[key].toDo}</Text>
-                <TouchableOpacity onPress={() => deleteToDo(key)}>
-                  <Feather name="delete" size={24} color={theme.inactivated} />
-                </TouchableOpacity>
-              </View>
-              :
-              null
+          {Object.keys(toDos).map(id =>
+            toDos[id].isStudy === isStudy ?
+            (toDos[id].editMode === false ?
+              <ToDoDefault key={id} id={id} toDos={toDos} setToDos={setToDos} saveToDos={saveToDos} editModeSwitch={editModeSwitch} />              
+            :
+              <ToDoEdit key={id} id={id} toDos={toDos} setToDos={setToDos} saveToDos={saveToDos} editModeSwitch={editModeSwitch} />
+            )
+            :
+            null
           )}
         </ScrollView>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.background,
-    paddingHorizontal: 20
-  },
-
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 100
-  },
-
-  btnText: {
-    fontSize: 40,
-    fontWeight: "bold"
-  },
-
-  input: {
-    backgroundColor: "white",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    marginVertical: 20,
-    fontSize: 15
-  },
-
-  toDoView: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: theme.toDoBackground,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    marginBottom: 10
-  },
-
-  toDoText: {
-    color: "white",
-    fontSize: 15  
-  }
-});
