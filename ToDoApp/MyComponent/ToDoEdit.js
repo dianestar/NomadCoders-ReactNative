@@ -35,7 +35,7 @@ export default function ToDoEdit( { id, toDos, setToDos, saveToDos, editModeSwit
           blurOnSubmit
         />
         <TouchableOpacity onPress={editToDo}>
-          <Ionicons name="checkmark-done" size={24} color="white" />
+          <Ionicons name="checkmark-done" size={24} color="gray" />
         </TouchableOpacity>
       </View>
     );

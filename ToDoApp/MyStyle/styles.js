@@ -47,8 +47,7 @@ const styles = StyleSheet.create({
   editInput: {
     flex: 0.9,
     backgroundColor: "white",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     borderRadius: 10,
     fontSize: 15
   },

@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, Alert } from "react-native";
+import { View, TouchableOpacity, Text, Alert, TouchableHighlightComponent } from "react-native";
 import { Feather } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../MyStyle/colors';
@@ -43,12 +43,12 @@ export default function ToDo( { id, toDos, setToDos, saveToDos, editModeSwitch }
             {toDos[id].done ? 
               <MaterialIcons name="check-box" size={24} color={theme.inactivated} style={{marginRight: 10}} />
               : 
-              <MaterialIcons name="check-box-outline-blank" size={24} color="white" style={{marginRight: 10}} />
+              <MaterialIcons name="check-box-outline-blank" size={24} color={theme.point} style={{marginRight: 10}} />
             }
           </TouchableOpacity>
           <Text style={{...styles.toDoText,
-            textDecorationLine: toDos[id].done ? "line-through" : null,
-            color: toDos[id].done ? theme.inactivated : "white"
+            color: toDos[id].done ? theme.inactivated : theme.point,
+            textDecorationLine: toDos[id].done ? "line-through" : null
             }}
           >
             {toDos[id].toDo}
@@ -59,7 +59,7 @@ export default function ToDo( { id, toDos, setToDos, saveToDos, editModeSwitch }
             <Feather name="edit" size={24} color={theme.inactivated} style={{marginRight: 10}} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => deleteToDo(id)}>
-            <Feather name="delete" size={24} color="black" />
+            <Feather name="delete" size={24} color={theme.inactivated} />
           </TouchableOpacity>
         </View>
       </View>

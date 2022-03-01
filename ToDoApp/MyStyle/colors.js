@@ -1,5 +1,6 @@
 export const theme = {
-    background: "black",
-    inactivated: "#3a3d40",
-    toDoBackground: "#5c5c60"
+    background: "#FFB6C1",
+    inactivated: "#FE91A4",
+    point: "#FF69B4",
+    toDoBackground: "white"
 };
