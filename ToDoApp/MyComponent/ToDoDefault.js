@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, Alert, TouchableHighlightComponent } from "react-native";
+import { View, TouchableOpacity, Text, Alert, Platform } from "react-native";
 import { Feather } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from '../MyStyle/colors';
@@ -6,6 +6,16 @@ import styles from '../MyStyle/styles';
 
 export default function ToDo( { id, toDos, setToDos, saveToDos, editModeSwitch } ) {
     const deleteToDo = (id) => {
+      if (Platform.OS === "web") {
+        const ok = confirm("Are you sure to delete " + toDos[id].toDo + "?");
+        if (ok) {
+          const newToDos = {...toDos};
+          delete newToDos[id];
+          setToDos(newToDos);
+          saveToDos(newToDos);          
+        }
+      }
+      else {
         Alert.alert(
           "Delete " + toDos[id].toDo, 
           "Are you sure?",
@@ -25,7 +35,8 @@ export default function ToDo( { id, toDos, setToDos, saveToDos, editModeSwitch }
               }
             }
           ]
-        );
+        );  
+      }
     };
     
     const changeStatus = (id) => {

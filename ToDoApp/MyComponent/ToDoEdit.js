@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, TouchableOpacity, TextInput } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../MyStyle/colors';
 import styles from '../MyStyle/styles';
-import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
 export default function ToDoEdit( { id, toDos, setToDos, saveToDos, editModeSwitch } ) {
     const [edited, setEdited] = useState("");

@@ -14,11 +14,6 @@ const styles = StyleSheet.create({
     marginTop: 100
   },
 
-  btnText: {
-    fontSize: 40,
-    fontWeight: "bold"
-  },
-
   insertInput: {
     backgroundColor: "white",
     paddingVertical: 10,

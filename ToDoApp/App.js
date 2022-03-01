@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, TouchableOpacity, TextInput, ScrollView, Alert, TouchableHighlightComponent } from 'react-native';
+import { Text, View, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ToDoDefault from './MyComponent/ToDoDefault';
 import ToDoEdit from './MyComponent/ToDoEdit';
@@ -82,10 +82,18 @@ export default function App() {
       <StatusBar style="auto" />
       <View style={styles.header}>
         <TouchableOpacity onPress={study}>
-          <Text style={{...styles.btnText, color: isStudy ? "white" : theme.inactivated}}>Study</Text>
+          <Text style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            color: isStudy? "white" : theme.inactivated
+          }}>Study</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={health}>
-          <Text style={{...styles.btnText, color: !isStudy? "white" : theme.inactivated}}>Health</Text>
+          <Text style={{
+            fontSize: 40,
+            fontWeight: "bold",
+            color: !isStudy? "white" : theme.inactivated
+          }}>Health</Text>
         </TouchableOpacity>
       </View>
       <View>
